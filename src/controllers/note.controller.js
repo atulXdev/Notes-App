@@ -71,3 +71,26 @@ exports.createNotesBulk = async (req, res) => {
     });
   }
 };
+
+// ==========================================
+// 3. GET /api/notes — Get all notes
+// ==========================================
+exports.getNotes = async (req, res) => {
+  try {
+    // Find ALL notes in the database (no filter = get everything)
+    const notes = await Note.find();
+
+    // Send them back with 200 (200 = "OK, here you go")
+    res.status(200).json({
+      success: true,
+      message: "Notes fetched successfully",
+      data: notes,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      data: null,
+    });
+  }
+};

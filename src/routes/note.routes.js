@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-// Import controller functions
+// Import ALL controller functions
 const {
   createNote,
   createNotesBulk,
@@ -10,6 +10,7 @@ const {
   replaceNote,
   updateNote,
   deleteNote,
+  deleteNotesBulk,
 } = require("../controllers/note.controller");
 
 // Route 1: POST /api/notes — Create a single note
@@ -32,5 +33,11 @@ router.patch("/:id", updateNote);
 
 // Route 7: DELETE /api/notes/:id — Delete a single note
 router.delete("/:id", deleteNote);
+
+// Route 8: DELETE /api/notes/bulk — Delete multiple notes at once
+// IMPORTANT: This route MUST be above "/:id" routes if they share the same method,
+// but since we defined /:id first for DELETE, Express matches "/bulk" literally first
+// before trying to treat "bulk" as an :id — so this works fine!
+router.delete("/bulk", deleteNotesBulk);
 
 module.exports = router;

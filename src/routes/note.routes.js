@@ -8,6 +8,7 @@ const {
   getNotes,
   getNoteById,
   replaceNote,
+  updateNote,
 } = require("../controllers/note.controller");
 
 // Route 1: POST /api/notes — Create a single note
@@ -24,5 +25,8 @@ router.get("/:id", getNoteById);
 
 // Route 5: PUT /api/notes/:id — Replace a note completely
 router.put("/:id", replaceNote);
+
+// Route 6: PATCH /api/notes/:id — Update specific fields only
+router.patch("/:id", updateNote);
 
 module.exports = router;

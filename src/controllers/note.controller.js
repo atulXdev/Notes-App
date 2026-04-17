@@ -264,3 +264,46 @@ exports.updateNote = async (req, res) => {
     });
   }
 };
+
+// =============================================
+// 7. DELETE /api/notes/:id — Delete one note
+// =============================================
+exports.deleteNote = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid note ID format",
+        data: null,
+      });
+    }
+
+    // findByIdAndDelete finds the note AND deletes it in one step
+    const deletedNote = await Note.findByIdAndDelete(id);
+
+    // If nothing was deleted, that ID doesn't exist
+    if (!deletedNote) {
+      return res.status(404).json({
+        success: false,
+        message: "Note not found",
+        data: null,
+      });
+    }
+
+    // Successfully deleted — data is null because the note is gone
+    res.status(200).json({
+      success: true,
+      message: "Note deleted successfully",
+      data: null,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      data: null,
+    });
+  }
+};

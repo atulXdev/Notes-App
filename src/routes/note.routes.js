@@ -7,6 +7,7 @@ const {
   createNotesBulk,
   getNotes,
   getNoteById,
+  replaceNote,
 } = require("../controllers/note.controller");
 
 // Route 1: POST /api/notes — Create a single note
@@ -20,5 +21,8 @@ router.get("/", getNotes);
 
 // Route 4: GET /api/notes/:id — Get one note by its ID
 router.get("/:id", getNoteById);
+
+// Route 5: PUT /api/notes/:id — Replace a note completely
+router.put("/:id", replaceNote);
 
 module.exports = router;

@@ -140,3 +140,62 @@ exports.getNoteById = async (req, res) => {
     });
   }
 };
+
+// =============================================
+// 5. PUT /api/notes/:id — Replace note fully
+// =============================================
+// PUT = FULL replacement. Every field must be sent.
+// If you don't send a field, it will be reset to its default value.
+exports.replaceNote = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid note ID format",
+        data: null,
+      });
+    }
+
+    // Check if note exists first
+    const existingNote = await Note.findById(id);
+    if (!existingNote) {
+      return res.status(404).json({
+        success: false,
+        message: "Note not found",
+        data: null,
+      });
+    }
+
+    // findOneAndUpdate with "overwrite: true" replaces the ENTIRE document
+    // "new: true" means return the UPDATED version (not the old one)
+    // "runValidators: true" means still check our schema rules (like required fields)
+    const replacedNote = await Note.findOneAndUpdate(
+      { _id: id },        // find the note with this id
+      req.body,            // replace with whatever the user sent
+      { new: true, overwrite: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Note replaced successfully",
+      data: replacedNote,
+    });
+  } catch (err) {
+    // If validation fails (like missing title), mongoose throws an error
+    if (err.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: err.message,
+        data: null,
+      });
+    }
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      data: null,
+    });
+  }
+};

@@ -14,11 +14,11 @@ const {
 
 router.post("/", createNote);
 router.post("/bulk", createNotesBulk);
-router.get("/", getNotes);
+router.get("/all", getNotes);
+router.delete("/bulk", deleteNotesBulk);
 router.get("/:id", getNoteById);
 router.put("/:id", replaceNote);
 router.patch("/:id", updateNote);
 router.delete("/:id", deleteNote);
-router.delete("/bulk", deleteNotesBulk);
 
 module.exports = router;
